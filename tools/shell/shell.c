@@ -19871,19 +19871,21 @@ static void process_sqliterc(
   const char *sqliterc_override   /* Name of config file. NULL to use default */
 ){
   char *home_dir = NULL;
+  char *pwd_dir = NULL;
   const char *sqliterc = sqliterc_override;
   char *zBuf = 0;
   FILE *inSaved = p->in;
   int savedLineno = p->lineno;
 
   if (sqliterc == NULL) {
-    home_dir = find_home_dir(0);
-    if( home_dir==0 ){
-      raw_printf(stderr, "-- warning: cannot find home directory;"
-                      " cannot read ~/.duckdbrc\n");
+    //home_dir = find_home_dir(0);
+    pwd_dir=getcwd(NULL, 0);
+    if( pwd_dir==0 ){
+      raw_printf(stderr, "-- warning: cannot find current directory;"
+                      " cannot read /.initVE\n");
       return;
     }
-    zBuf = sqlite3_mprintf("%s/.duckdbrc",home_dir);
+    zBuf = sqlite3_mprintf("%s/.initVE",pwd_dir);
     sqliterc = zBuf;
   }
   p->in = fopen(sqliterc,"rb");
@@ -19951,7 +19953,7 @@ static const char zOptions[] =
   "   -stats               print memory stats before each finalize\n"
   "   -table               set output mode to 'table'\n"
   "   -unsigned            allow loading of unsigned extensions\n"
-  "   -version             show DuckDB version\n"
+  "   -version             show VEngine version\n"
 #ifdef SQLITE_HAVE_ZLIB
   "   -zip                 open the file as a ZIP Archive\n"
 #endif
@@ -19959,7 +19961,7 @@ static const char zOptions[] =
 static void usage(int showDetail){
   utf8_printf(stderr,
       "Usage: %s [OPTIONS] FILENAME [SQL]\n"
-      "FILENAME is the name of an DuckDB database. A new database is created\n"
+      "FILENAME is the name of an VEngine database. A new database is created\n"
       "if the file does not previously exist.\n", Argv0);
   if( showDetail ){
     utf8_printf(stderr, "OPTIONS include:\n%s", zOptions);
@@ -19996,7 +19998,7 @@ static void main_init(ShellState *data) {
   sqlite3_config(SQLITE_CONFIG_URI, 1);
   sqlite3_config(SQLITE_CONFIG_LOG, shellLog, data);
   sqlite3_config(SQLITE_CONFIG_MULTITHREAD);
-  sqlite3_snprintf(sizeof(mainPrompt), mainPrompt, "D ");
+  sqlite3_snprintf(sizeof(mainPrompt), mainPrompt, "VEngine> ");
   sqlite3_snprintf(sizeof(continuePrompt), continuePrompt, "> ");
 }
 
@@ -20557,7 +20559,7 @@ int SQLITE_CDECL wmain(int argc, wchar_t **wargv){
       char *zHistory;
       int nHistory;
       printf(
-        "%s %.19s\n" /*extra-version-info*/
+        "Visionsky-VEngine %s %.19s\n" /*extra-version-info*/
         "Enter \".help\" for usage hints.\n",
         sqlite3_libversion(), sqlite3_sourceid()
       );
@@ -20573,7 +20575,7 @@ int SQLITE_CDECL wmain(int argc, wchar_t **wargv){
       }else if( (zHome = find_home_dir(0))!=0 ){
         nHistory = strlen30(zHome) + 20;
         if( (zHistory = malloc(nHistory))!=0 ){
-          sqlite3_snprintf(nHistory, zHistory,"%s/.duckdb_history", zHome);
+          sqlite3_snprintf(nHistory, zHistory,"%s/.VEngine_history", zHome);
         }
       }
       if( zHistory ){ shell_read_history(zHistory); }

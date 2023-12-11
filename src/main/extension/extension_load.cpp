@@ -229,10 +229,13 @@ bool ExtensionHelper::TryInitialLoad(DBConfig &config, FileSystem &fs, const str
 	if (engine_version.length() > 0 && engine_version[0] == 'v') {
 		engine_version_trimmed = engine_version.substr(1);
 	}
-
+	
 	if (extension_version_trimmed != engine_version_trimmed) {
-		throw InvalidInputException("Extension \"%s\" version (%s) does not match DuckDB version (%s)", filename,
-		                            extension_version, engine_version);
+		string message = StringUtil::Format("Warning: Extension \"%s\" version (%s) does not match DuckDB version (%s)",
+		                                    filename, extension_version, engine_version);
+		Printer::Print(message);
+		// throw InvalidInputException("Extension \"%s\" version (%s) does not match DuckDB version (%s)", filename,
+		//                            extension_version, engine_version);
 	}
 
 	result.basename = basename;

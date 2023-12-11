@@ -32,13 +32,15 @@ const string ExtensionHelper::GetVersionDirectoryName() {
 #ifdef DUCKDB_WASM_VERSION
 	return DUCKDB_QUOTE_DEFINE(DUCKDB_WASM_VERSION);
 #endif
+    return "3c695d7ba9";
+	//return "e807b416e8";
+	/*
 	if (IsRelease(DuckDB::LibraryVersion())) {
 		return NormalizeVersionTag(DuckDB::LibraryVersion());
 	} else {
 		return DuckDB::SourceID();
-	}
+	}*/
 }
-
 const vector<string> ExtensionHelper::PathComponents() {
 	return vector<string> {".duckdb", "extensions", GetVersionDirectoryName(), DuckDB::Platform()};
 }
