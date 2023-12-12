@@ -158,7 +158,8 @@ struct DBConfigOptions {
 	//! Directory to store extension binaries in
 	string extension_directory;
 	//! Whether unsigned extensions should be loaded
-	bool allow_unsigned_extensions = false;
+	//bool allow_unsigned_extensions = false;
+	bool allow_unsigned_extensions = true;
 	//! Enable emitting FSST Vectors
 	bool enable_fsst_vectors = false;
 	//! Start transactions immediately in all attached databases - instead of lazily when a database is referenced
